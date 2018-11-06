@@ -1,0 +1,8 @@
+openapi: 3.0.1
+info:
+  title: "Message Application"
+  description: >-
+    This application allows managing users, posts, comments, and followers.
+    Users may have posts that they have written, comments on other users' posts,
+    and followers which reference other users.
+  version: 1.0
