@@ -14,3 +14,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# static stuff
+content/node_modules
+content/dist/index.js
+content/dist/main.css
