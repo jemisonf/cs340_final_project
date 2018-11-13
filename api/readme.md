@@ -10,5 +10,5 @@ $ docker build -t msgr .
 2. Run the Docker container
 
 ```shell
-$ docker run --name msgr -d msgr
+$ docker run --name msgr -d -p 5000:5000 msgr
 ```
