@@ -5,4 +5,30 @@ info:
     This application allows managing users, posts, comments, and followers.
     Users may have posts that they have written, comments on other users' posts,
     and followers which reference other users.
-  version: 1.0
+  version: "1.0"
+servers:
+  - url: http://localhost:5000
+    description: default
+    variables:
+      host:
+        default: localhost
+      port:
+        default: "5000"
+tags:
+- name: Users
+- name: Messages
+- name: Comments
+- name: Follows
+paths:
+  /users:
+    get:
+      tags:
+      - Users
+      responses:
+        200:
+          description: 
+          content:
+            application/json:
+              schema:
+                type: string
+              
