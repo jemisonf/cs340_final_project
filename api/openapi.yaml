@@ -68,7 +68,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         '400':
-          description: Invalid user object
+          description: Invalid User object
         '500':
           description: Internal server error
   /users/{id}:
@@ -84,6 +84,10 @@ paths:
       responses:
         '200':
           description: Successfully retrieved user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
         '404':
           description: User with this id not found
         '500':
@@ -104,7 +108,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         '400':
-          description: Invalid user object
+          description: Invalid User object
         '500':
           description: Internal server error
     delete:
@@ -159,7 +163,93 @@ paths:
                   $ref: '#/components/schemas/User'
         '500':
           description: Internal server error
-              
+  /messages:
+    get:
+      tags:
+      - Messages
+      parameters:
+      - name: poster
+        in: query
+        schema:
+          type: integer
+        required: false
+        description: id of user who posted messages
+      responses:
+        '200':
+          description: Successfully retrieved messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        '500':
+          description: Internal server error
+    post:
+      tags:
+      - Messages
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+      responses:
+        '201':
+          description: Successfully created message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: Invalid Message object
+        '500':
+          description: Internal server error
+  /messages/{id}:
+    parameters:
+    - name: id
+      in: path
+      schema:
+        type: integer
+      required: true
+    get:
+      tags:
+      - Messages
+      responses:
+        '200':
+          description: Successfully retrieved message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: Message with this id not found
+        '500':
+          description: Internal server error
+    put:
+      tags:
+      - Messages
+      responses:
+        '200':
+          description: Successfully update message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: Invalid Message object
+        '500':
+          description: Internal server error
+    delete:
+      tags:
+      - Messages
+      responses:
+        '204':
+          description: Successfully deleted message
+        '404':
+          description: Message with this id not found
+        '500':
+          description: Internal server error
+
 components:
   schemas:
     User:
