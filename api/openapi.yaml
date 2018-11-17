@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: "Message Application"
+  title: "msgr"
   description: >-
     This application allows managing users, posts, comments, and followers.
     Users may have posts that they have written, comments on other users' posts,
@@ -24,6 +24,7 @@ tags:
 paths:
   /users:
     get:
+      summary: Get users by search parameters
       tags:
       - Users
       parameters:
@@ -52,6 +53,7 @@ paths:
         '500':
           description: Internal server error
     post:
+      summary: Create a new user
       tags:
       - Users
       requestBody:
@@ -78,6 +80,7 @@ paths:
         type: integer
       required: true
     get:
+      summary: Get user by id
       tags:
       - Users
       responses:
@@ -92,6 +95,7 @@ paths:
         '500':
           description: Internal server error
     put:
+      summary: Update an existing user
       tags:
       - Users
       requestBody:
@@ -108,9 +112,12 @@ paths:
                 $ref: '#/components/schemas/User'
         '400':
           description: Invalid User object
+        '404':
+          description: User with this id not found
         '500':
           description: Internal server error
     delete:
+      summary: Delete a user
       tags:
       - Users
       responses:
@@ -128,6 +135,7 @@ paths:
         type: integer
       required: true
     get:
+      summary: Get a user's followers
       tags:
       - Users
       responses:
@@ -139,6 +147,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
+        '404':
+          description: User with this id not found
         '500':
           description: Internal server error
   /users/{id}/following:
@@ -149,6 +159,7 @@ paths:
         type: integer
       required: true
     get:
+      summary: Get users that a user follows
       tags:
       - Users
       responses:
@@ -160,10 +171,37 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
+        '404':
+          description: User with this id not found
+        '500':
+          description: Internal server error
+  /users/{id}/feed:
+    parameters:
+    - name: id
+      in: path
+      schema:
+        type: integer
+      required: true
+    get:
+      summary: Gets all messages made by the users that a user follows
+      tags:
+      - Messages
+      responses:
+        '200':
+          description: Successfully retrieved messages in feed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        '404':
+          description: User with this id not found
         '500':
           description: Internal server error
   /messages:
     get:
+      summary: Get messages by search parameters
       tags:
       - Messages
       parameters:
@@ -185,6 +223,7 @@ paths:
         '500':
           description: Internal server error
     post:
+      summary: Create a new message
       tags:
       - Messages
       requestBody:
@@ -211,6 +250,7 @@ paths:
         type: integer
       required: true
     get:
+      summary: Get message by id
       tags:
       - Messages
       responses:
@@ -224,21 +264,8 @@ paths:
           description: Message with this id not found
         '500':
           description: Internal server error
-    put:
-      tags:
-      - Messages
-      responses:
-        '200':
-          description: Successfully update message
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Message'
-        '400':
-          description: Invalid Message object
-        '500':
-          description: Internal server error
     delete:
+      summary: Delete a message
       tags:
       - Messages
       responses:
@@ -250,6 +277,7 @@ paths:
           description: Internal server error
   /comments:
     get:
+      summary: Get comments by search parameters
       tags:
       - Comments
       parameters:
@@ -264,7 +292,7 @@ paths:
         schema:
           type: integer
         required: false
-        description: The id of the user that made the comment
+        description: The id of the user that made comments
       responses:
         '200':
           description: Successfully retrieved comments
@@ -277,6 +305,7 @@ paths:
         '500':
           description: Internal server error
     post:
+      summary: Create a new comment
       tags:
       - Comments
       requestBody:
@@ -303,6 +332,7 @@ paths:
         type: integer
       required: true
     get:
+      summary: Get comment by id
       tags:
       - Comments
       responses:
@@ -316,28 +346,8 @@ paths:
           description: Comment with this id not found
         '500':
           description: Internal server error
-    put:
-      tags:
-      - Comments
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Comment'
-      responses:
-        '200':
-          description: Successfully updated comment
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Comment'
-        '400':
-          description: Invalid Comment object
-        '404':
-          description: Comment with this id not found
-        '500':
-          description: Internal server error
     delete:
+      summary: Delete a comment
       tags:
       - Comments
       responses:
