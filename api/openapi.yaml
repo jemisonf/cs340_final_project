@@ -1,0 +1,403 @@
+openapi: 3.0.1
+info:
+  title: "msgr"
+  description: >-
+    This application allows managing users, posts, comments, and followers.
+    Users may have posts that they have written, comments on other users' posts,
+    and followers which reference other users.
+  version: "1.0"
+
+servers:
+  - url: http://{host}:{port}
+    description: default
+    variables:
+      host:
+        default: localhost
+      port:
+        default: "5000"
+
+tags:
+- name: Users
+- name: Messages
+- name: Comments
+
+paths:
+  /users:
+    get:
+      summary: Get users by search parameters
+      tags:
+      - Users
+      parameters:
+      - name: name
+        in: query
+        description: Name of user(s) to search by
+        required: false
+        schema:
+          type: string
+      - name: email
+        in: query
+        description: Email of user(s) to search by
+        required: false
+        schema:
+          type: string
+          format: email
+      responses:
+        '200':
+          description: Successfully retrieved users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '500':
+          description: Internal server error
+    post:
+      summary: Create a new user
+      tags:
+      - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Successfully created user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid User object
+        '500':
+          description: Internal server error
+  /users/{id}:
+    parameters:
+    - name: id
+      in: path
+      schema:
+        type: integer
+      required: true
+    get:
+      summary: Get user by id
+      tags:
+      - Users
+      responses:
+        '200':
+          description: Successfully retrieved user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User with this id not found
+        '500':
+          description: Internal server error
+    put:
+      summary: Update an existing user
+      tags:
+      - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Successfully updated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid User object
+        '404':
+          description: User with this id not found
+        '500':
+          description: Internal server error
+    delete:
+      summary: Delete a user
+      tags:
+      - Users
+      responses:
+        '204':
+          description: User successfully deleted
+        '404':
+          description: User with this id not found
+        '500':
+          description: Internal server error
+  /users/{id}/followers:
+    parameters:
+    - name: id
+      in: path
+      schema:
+        type: integer
+      required: true
+    get:
+      summary: Get a user's followers
+      tags:
+      - Users
+      responses:
+        '200':
+          description: Follower users successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '404':
+          description: User with this id not found
+        '500':
+          description: Internal server error
+  /users/{id}/following:
+    parameters:
+    - name: id
+      in: path
+      schema:
+        type: integer
+      required: true
+    get:
+      summary: Get users that a user follows
+      tags:
+      - Users
+      responses:
+        '200':
+          description: Following users successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '404':
+          description: User with this id not found
+        '500':
+          description: Internal server error
+  /users/{id}/feed:
+    parameters:
+    - name: id
+      in: path
+      schema:
+        type: integer
+      required: true
+    get:
+      summary: Gets all messages made by the users that a user follows
+      tags:
+      - Messages
+      responses:
+        '200':
+          description: Successfully retrieved messages in feed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        '404':
+          description: User with this id not found
+        '500':
+          description: Internal server error
+  /messages:
+    get:
+      summary: Get messages by search parameters
+      tags:
+      - Messages
+      parameters:
+      - name: poster
+        in: query
+        schema:
+          type: integer
+        required: false
+        description: id of user who posted messages
+      responses:
+        '200':
+          description: Successfully retrieved messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        '500':
+          description: Internal server error
+    post:
+      summary: Create a new message
+      tags:
+      - Messages
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+      responses:
+        '201':
+          description: Successfully created message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: Invalid Message object
+        '500':
+          description: Internal server error
+  /messages/{id}:
+    parameters:
+    - name: id
+      in: path
+      schema:
+        type: integer
+      required: true
+    get:
+      summary: Get message by id
+      tags:
+      - Messages
+      responses:
+        '200':
+          description: Successfully retrieved message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: Message with this id not found
+        '500':
+          description: Internal server error
+    delete:
+      summary: Delete a message
+      tags:
+      - Messages
+      responses:
+        '204':
+          description: Successfully deleted message
+        '404':
+          description: Message with this id not found
+        '500':
+          description: Internal server error
+  /comments:
+    get:
+      summary: Get comments by search parameters
+      tags:
+      - Comments
+      parameters:
+      - name: message_id
+        in: query
+        schema:
+          type: integer
+        required: false
+        description: The id of the message that comments were made on
+      - name: commenter_id
+        in: query
+        schema:
+          type: integer
+        required: false
+        description: The id of the user that made comments
+      responses:
+        '200':
+          description: Successfully retrieved comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+        '500':
+          description: Internal server error
+    post:
+      summary: Create a new comment
+      tags:
+      - Comments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+      responses:
+        '201':
+          description: Successfully created comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          description: Invalid Comment object
+        '500':
+          description: Internal server error
+  /comments/{id}:
+    parameters:
+    - name: id
+      in: path
+      schema:
+        type: integer
+      required: true
+    get:
+      summary: Get comment by id
+      tags:
+      - Comments
+      responses:
+        '200':
+          description: Successfully retrieved comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '404':
+          description: Comment with this id not found
+        '500':
+          description: Internal server error
+    delete:
+      summary: Delete a comment
+      tags:
+      - Comments
+      responses:
+        '204':
+          description: Successfully deleted comment
+        '404':
+          description: Comment with this id not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        account_created:
+          type: string
+          format: date-time
+        bio:
+          type: string
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+        poster:
+          type: integer
+        posted_date:
+          type: string
+          format: date-time
+        message:
+          type: string
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+        msg_id:
+          type: integer
+        commenter_id:
+          type: integer
+        posted_date:
+          type: string
+          format: date-time
+        message:
+          type: string
