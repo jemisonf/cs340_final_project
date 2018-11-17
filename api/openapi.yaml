@@ -20,7 +20,6 @@ tags:
 - name: Users
 - name: Messages
 - name: Comments
-- name: Follows
 
 paths:
   /users:
@@ -247,6 +246,105 @@ paths:
           description: Successfully deleted message
         '404':
           description: Message with this id not found
+        '500':
+          description: Internal server error
+  /comments:
+    get:
+      tags:
+      - Comments
+      parameters:
+      - name: message_id
+        in: query
+        schema:
+          type: integer
+        required: false
+        description: The id of the message that comments were made on
+      - name: commenter_id
+        in: query
+        schema:
+          type: integer
+        required: false
+        description: The id of the user that made the comment
+      responses:
+        '200':
+          description: Successfully retrieved comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+        '500':
+          description: Internal server error
+    post:
+      tags:
+      - Comments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+      responses:
+        '201':
+          description: Successfully created comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          description: Invalid Comment object
+        '500':
+          description: Internal server error
+  /comments/{id}:
+    parameters:
+    - name: id
+      in: path
+      schema:
+        type: integer
+      required: true
+    get:
+      tags:
+      - Comments
+      responses:
+        '200':
+          description: Successfully retrieved comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '404':
+          description: Comment with this id not found
+        '500':
+          description: Internal server error
+    put:
+      tags:
+      - Comments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+      responses:
+        '200':
+          description: Successfully updated comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          description: Invalid Comment object
+        '404':
+          description: Comment with this id not found
+        '500':
+          description: Internal server error
+    delete:
+      tags:
+      - Comments
+      responses:
+        '204':
+          description: Successfully deleted comment
+        '404':
+          description: Comment with this id not found
         '500':
           description: Internal server error
 
