@@ -19,3 +19,6 @@ venv.bak/
 content/node_modules
 content/dist/index.js
 content/dist/main.css
+
+# flask app configuration file
+api/flask-app/configuration.py
