@@ -1,0 +1,101 @@
+version: 2
+jobs:
+  test:
+    docker:
+      - image: circleci/node:8.10.0
+    steps:
+      - checkout 
+      - run:
+          name: install npm dependencies
+          command: npm install --prefix content/
+      - run:
+          name: Build sass
+          command: npm run sass --prefix content/
+      - run:
+          name: Build js
+          command: npm run pack --prefix content/
+      - setup_remote_docker
+      - run:
+          name: Build dockerfile
+          command: docker build -t jemisonf/msgr_api api/
+  build:
+    docker: 
+      - image: circleci/node:8.10.0
+    steps:
+      - checkout 
+      - run:
+          name: install npm dependencies
+          command: npm install --prefix content/
+      - run:
+          name: Build sass
+          command: npm run sass --prefix content/
+      - run:
+          name: Build js
+          command: npm run pack --prefix content/
+      - setup_remote_docker
+      - run:
+          name: Build dockerfile
+          command: docker build -t jemisonf/msgr_api api/
+      - run:
+          name: Login to docker hub
+          command: docker login -u="$DOCKERHUB_USER" -p="$DOCKERHUB_PWD" 
+      - run:
+          name: push to docker hub
+          command: docker push jemisonf/msgr_api:latest
+  deploy-nginx:
+    docker:
+      - image: circleci/node:8.10.0
+    steps:
+      - add-ssh-keys:
+          fingerprints:
+            - "2c:6e:41:73:bb:c0:04:df:a6:a1:ac:e1:23:2f:b6:d7"
+      - checkout
+      - run:
+          name: setup files
+          command: |
+                npm install --prefix content/ && 
+                npm run sass --prefix content/ &&
+                npm run pack --prefix content/
+      - run:
+          name: test SSH connection
+          command: ssh -o "StrictHostKeyChecking=no" $NGINX_USER@$NGINX_HOST "echo 'Hello world!'"
+      - run:
+          name: copy with scp
+          command: scp content/dist/* $NGINX_USER@$NGINX_HOST:/usr/share/nginx/html/
+  deploy-flask:
+    docker:
+      - image: circleci/python:3.6
+    steps:
+      - add-ssh-keys:
+          fingerprints:
+            - "2c:6e:41:73:bb:c0:04:df:a6:a1:ac:e1:23:2f:b6:d7"
+      - checkout 
+      - run:
+          name: run update docker script
+          command: ssh -o "StrictHostKeyChecking=no" $FLASK_USER@$FLASK_HOST "cs340_final_project/api/update-docker.sh && exit"
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
+  build-and-deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: 
+                - master
+      - deploy-nginx:
+          requires:
+            - build
+          filters:
+            branches:
+              only: 
+                - master
+      - deploy-flask:
+          requires:
+            - build
+          filters:
+            branches:
+              only: 
+                - master
