@@ -20,6 +20,7 @@ tags:
 - name: Users
 - name: Messages
 - name: Comments
+- name: Follows
 
 paths:
   /users:
@@ -357,6 +358,51 @@ paths:
           description: Comment with this id not found
         '500':
           description: Internal server error
+  /follows:
+    post:
+      summary: Create a new follow relationship
+      tags:
+      - Follows
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Follow'
+      responses:
+        '201':
+          description: Successfully created follow relationship
+        '400':
+          description: Invalid Follow object
+        '404':
+          description: One or both users in the follow relationship not found
+        '409':
+          description: Follow object with these properties already exists
+        '500':
+          description: Internal server error
+    delete:
+      summary: Delete a follow relationship
+      tags:
+      - Follows
+      parameters:
+      - name: follower_id
+        in: query
+        schema:
+          type: integer
+        required: true
+      - name: following_id
+        in: query
+        schema:
+          type: integer
+        required: true
+      responses:
+        '204':
+          description: Successfully deleted follow relationship
+        '400':
+          description: Incorrect use of query parameters
+        '404':
+          description: Follow relationship not found
+        '500':
+          description: Internal server error
 
 components:
   schemas:
@@ -401,3 +447,10 @@ components:
           format: date-time
         message:
           type: string
+    Follow:
+      type: object
+      properties:
+        follower_id:
+          type: integer
+        following_id:
+          type: integer
