@@ -1,37 +1,15 @@
 import React from "react";
+import { Route, Switch} from "react-router-dom";
 import Message from "./Message.jsx";
+import Messages from "./Messages.jsx";
 
 class Main extends React.Component {
     render() {
         return (
-            <div className="content flex-col justify-center align-center">
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-            </div>
+            <Switch>
+                <Route exact path="/" component={Messages} />
+                <Route exact path="/message" component={Message} />
+            </Switch>
         )
     }
 }
