@@ -1,11 +1,18 @@
+.flex {
+  display: flex;
+}
+
 .flex-row {
   display: flex;
   flex-direction: row;
+  width: 100%;
+  margin-bottom: 10px;
 }
 
 .flex-col {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .flex-wrap {

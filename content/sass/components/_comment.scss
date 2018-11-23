@@ -1,0 +1,10 @@
+.comment {
+    background-color: $background;
+    width: 100%;
+    border-bottom: 1px solid darken($background, 10%);
+    padding: 10px;
+    box-sizing: border-box;
+    &:last-child {
+        border-bottom: 0;
+    }
+}
