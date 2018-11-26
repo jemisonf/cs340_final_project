@@ -4,6 +4,7 @@ import pymysql.cursors
 from flask import Flask, render_template, request, g, Response, jsonify
 from flask.json import JSONEncoder
 from marshmallow import ValidationError
+from flask_httpauth import HTTPTokenAuth
 
 from core.comment import CommentSchema
 from core.message import MessageSchema
@@ -24,7 +25,26 @@ class MyFlask(Flask):
 
 
 app = MyFlask(__name__)
+auth = HTTPTokenAuth(scheme='Token')
 app.config.from_pyfile("configuration.py")
+
+
+@auth.verify_token
+def verify_token(token):
+    return hasattr(g, "tokens") and token in g.tokens
+
+
+@app.route("/login", methods=["GET"])
+def login():
+    body = request.get_json()
+    if not all(k in body for k in ("username", "password")):
+        return Response(status=400)
+
+    credentials = {body["username"]: body["password"]}
+    if credentials not in app.config["CREDENTIALS"]:
+        return Response(status=400)
+
+    # TODO: generate token
 
 
 # Probably won't use templates since the Flask app will function solely as an
@@ -35,6 +55,7 @@ def index():
 
 
 @app.route("/users", methods=["GET", "POST"])
+@auth.login_required
 def users():
     db = get_db()
 
