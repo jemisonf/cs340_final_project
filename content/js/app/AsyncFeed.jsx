@@ -10,14 +10,24 @@ class AsyncFeed extends React.Component {
         };
     }
 
-    logResponse() {
-        console.log(this.reponseText);
+    updateContent(json) {
+        console.log(json);
+        let messages = json.map((element) => (
+            {id: element.id, text: element.message, authorId: element.poster, author: "Fischer Jemison"}
+        ))
+        this.setState({
+            content: <Messages messages={messages} />,
+            contentLoaded: true,
+        })
     }
     componentDidMount() {
-        var oReq = new XMLHttpRequest();
-        oReq.addEventListener("load", this.logResponse);
-        oReq.open("GET", "http://52.12.175.219/users/21/feed");
-        oReq.send();
+        fetch("http://52.12.175.219/users/21/feed")
+            .then((response) => {
+                return response.json();
+            })
+            .then((myJson) => {
+                this.updateContent(myJson);
+            })
     }
     render() {
         if (this.state.contentLoaded) {
