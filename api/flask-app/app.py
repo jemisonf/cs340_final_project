@@ -5,6 +5,8 @@ from flask import Flask, render_template, request, g, Response, jsonify
 from flask.json import JSONEncoder
 from marshmallow import ValidationError
 from flask_httpauth import HTTPTokenAuth
+from hashlib import sha256
+import json
 
 from core.comment import CommentSchema
 from core.message import MessageSchema
@@ -40,11 +42,21 @@ def login():
     if not all(k in body for k in ("username", "password")):
         return Response(status=400)
 
-    credentials = {body["username"]: body["password"]}
-    if credentials not in app.config["CREDENTIALS"]:
-        return Response(status=400)
+    username = body["username"]
+    password = body["password"]
 
-    # TODO: generate token
+    if (username not in app.config["CREDENTIALS"] or
+            password != app.config["CREDENTIALS"][username]):
+        return Response("Bad username/password combination", status=400)
+
+    credentials = {username: password}
+    new_token = sha256(json.dumps(credentials, sort_keys=True, ensure_ascii=True).encode('utf-8')).digest()
+    if not hasattr(g, "tokens"):
+        g.tokens = [new_token]
+    else:
+        g.tokens.append(new_token)
+    res_payload = {"token": new_token}
+    return jsonify(res_payload)
 
 
 # Probably won't use templates since the Flask app will function solely as an
