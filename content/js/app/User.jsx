@@ -7,8 +7,12 @@ class User extends React.Component {
         console.log("Rendering user component");
         return (
             <div className="flex-col align-center">
-                <UserInfo />
-                <Messages />
+                <UserInfo 
+                    name={this.props.user.name} 
+                    email={this.props.user.email}
+                    bio={this.props.user.bio}
+                    />
+                <Messages messages={this.props.messages} />
             </div>
         )
     }

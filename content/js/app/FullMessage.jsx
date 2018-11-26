@@ -1,42 +1,40 @@
+import {Link} from "react-router-dom";
+import PropTypes from "prop-types";
 import React from "react";
+import Comment from "./Comment.jsx";
 
 class FullMessage extends React.Component {
     render() {
         return(
-            <div class="box-shadow frame">
+            <div className="box-shadow frame">
                 <div className="box-inner">
                     <div className="flex-row message-text">
-                        <p>Test test hahaha</p>
+                        <p>{this.props.text}</p>
                     </div>
                     <div className="flex-row justify-start message-details">
-                        <a href="#">Fischer Jemison</a>
+                        <Link to={`/user/${this.props.authorId}`}>{this.props.author}</Link>
                     </div>
                 </div>
                 <div className="comments flex-col">
-                    <div className="comment flex-col">
-                        <p>This is a comment</p>
-                        <a href="#">Fischer Jemison</a>
-                    </div>
-                    <div className="comment flex-col">
-                        <p>This is a comment</p>
-                        <a href="#">Fischer Jemison</a>
-                    </div>
-                    <div className="comment flex-col">
-                        <p>This is a comment</p>
-                        <a href="#">Fischer Jemison</a>
-                    </div>
-                    <div className="comment flex-col">
-                        <p>This is a comment</p>
-                        <a href="#">Fischer Jemison</a>
-                    </div>
-                    <div className="comment flex-col">
-                        <p>This is a comment</p>
-                        <a href="#">Fischer Jemison</a>
-                    </div>
+                    {this.props.comments.map(comment => (
+                       <Comment key={comment.text} text={comment.text} author={comment.author} authorId={comment.authorId} /> 
+                    ))}
                 </div>
             </div>
         )
     }
 }
 
+FullMessage.propTypes = {
+    text: PropTypes.string,
+    author: PropTypes.string,
+    authorId: PropTypes.number,
+    comments: PropTypes.array
+}
+FullMessage.defaultProps = {
+    text: "",
+    author: "",
+    authorId: 0,
+    comments: []
+}
 export default FullMessage;

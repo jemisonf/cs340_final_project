@@ -3,37 +3,26 @@ import Message from "./Message.jsx"
 
 class Messages extends React.Component {
     render() {
+        console.log(this.props.messages);
         return (
             <div className="content flex-col justify-center align-center">
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
-                <Message text="test test test hahaha" authorName="Fischer Jemison" />
+                {
+                    this.props.messages.map(message => (
+                        <Message text={message.text}
+                                 author={message.author}
+                                 authorId={message.authorId}
+                                 id={message.id}
+                                 key={message.id}
+                        />
+                    ))
+                }
             </div>
         )
     }
+}
+
+Messages.defaultProps = {
+    messages: []
 }
 
 export default Messages;

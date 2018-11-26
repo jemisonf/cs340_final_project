@@ -6,12 +6,12 @@ import Main from "./Main.jsx";
 class App extends React.Component {
     render() {
         return (
-            <div id="main">
-                <Header />
                 <BrowserRouter>
-                    <Main />
+                    <div id="main">
+                        <Header />
+                        <Main />
+                    </div>
                 </BrowserRouter>
-            </div>
         );
     }
 }
