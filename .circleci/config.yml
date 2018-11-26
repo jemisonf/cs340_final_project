@@ -72,7 +72,7 @@ jobs:
       - checkout 
       - run:
           name: run update docker script
-          command: ssh -o "StrictHostKeyChecking=no" $FLASK_USER@$FLASK_HOST "cs340_final_project/api/update-docker.sh && exit"
+          command: ssh -o "StrictHostKeyChecking=no" $FLASK_USER@$FLASK_HOST "cs340_final_project/scripts/update-docker.sh && exit"
 workflows:
   version: 2
   test:
