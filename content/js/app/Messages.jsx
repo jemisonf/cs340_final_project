@@ -13,6 +13,7 @@ class Messages extends React.Component {
                                  authorId={message.authorId}
                                  id={message.id}
                                  key={message.id}
+                                 currentUser={this.props.currentUser}
                         />
                     ))
                 }

@@ -15,7 +15,7 @@ class User extends React.Component {
                     bearerToken={this.props.bearerToken}
                     currentUser={this.props.currentUser}
                     />
-                <Messages messages={this.props.messages} />
+                <Messages messages={this.props.messages} currentUser={this.props.currentUser} />
             </div>
         )
     }

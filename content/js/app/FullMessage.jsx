@@ -36,6 +36,7 @@ class FullMessage extends React.Component {
                     <div className="flex-row message-text">
                         <p>{this.props.text}</p>
                     </div>
+                    { this.props.currentUser == this.props.authorId ? <div className="flex-row justify-start"><Link to={`/messages/${this.props.id}/edit`}>Edit</Link></div> : "" }
                     <div className="flex-row justify-start message-details">
                         <Link to={`/user/${this.props.authorId}`}>{this.props.author}</Link>
                     </div>

@@ -31,7 +31,7 @@ class Feed extends React.Component {
         return (
             <div>
                 <SubmitMessage submitFunction={this.submitMessageAndRedraw} /> 
-                <Messages messages={this.props.messages} />
+                <Messages messages={this.props.messages} currentUser={this.props.currentUser} />
             </div>
         )
     }
