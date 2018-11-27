@@ -7,7 +7,7 @@ class Header extends React.Component {
             <div className="nav box-shadow">
                 <h1>msgr</h1>
                 <Link to="/">Home</Link>
-                <a href="#">My Profile</a>
+                <Link to={`/user/${this.props.currentUser}`}>My Profile</Link>
             </div>
         )
     }

@@ -14,11 +14,19 @@ class Main extends React.Component {
                 <Switch>
                     <Route exact path="/" render={
                         (props) => (
-                            <AsyncFeed userId={21}/>
+                            <AsyncFeed userId={this.props.currentUser} {...props}/>
                         )
                     }/>
-                    <Route path="/messages/:id" component={AsyncFullMessage} />
-                    <Route path="/user/:id" component={AsyncUser} />
+                    <Route path="/messages/:id" render={
+                        (props) => (
+                            <AsyncFullMessage currentUser={this.props.currentUser} {...props} />
+                        )
+                    }/>
+                    <Route path="/user/:id" render={
+                        (props) => (
+                            <AsyncUser currentUser={this.props.currentUser} {...props} />
+                        )    
+                    }/>
                 </Switch>
             </div>
         )
