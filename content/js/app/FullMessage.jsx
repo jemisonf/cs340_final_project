@@ -17,7 +17,7 @@ class FullMessage extends React.Component {
                 </div>
                 <div className="comments flex-col">
                     {this.props.comments.map(comment => (
-                       <Comment key={comment.text} text={comment.text} author={comment.author} authorId={comment.authorId} /> 
+                       <Comment key={comment.id} text={comment.text} author={comment.author} authorId={comment.authorId} /> 
                     ))}
                 </div>
             </div>

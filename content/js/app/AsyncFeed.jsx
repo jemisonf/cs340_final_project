@@ -21,7 +21,7 @@ class AsyncFeed extends React.Component {
         })
     }
     componentDidMount() {
-        fetch("http://52.12.175.219/users/21/feed")
+        fetch(`http://52.12.175.219/users/${this.props.userId}/feed`)
             .then((response) => {
                 return response.json();
             })
