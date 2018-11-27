@@ -6,7 +6,7 @@
   "scripts": {
     "sass": "node-sass sass/main.scss -o dist/",
     "pack": "webpack --mode=production",
-    "pack-dev": "webpack-dev-server --mode=development"
+    "pack-dev": "webpack-dev-server --mode=development --env.API_HOST=127.0.0.1"
   },
   "repository": {
     "type": "git",

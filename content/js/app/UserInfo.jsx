@@ -20,7 +20,11 @@ class UserInfo extends React.Component {
 
     getFollowing() {
         console.log("getting following . . ");
-        fetch(`http://52.12.175.219/users/${this.props.id}/following`)
+        fetch(`http://52.12.175.219/users/${this.props.id}/following`, {
+            headers: {
+                "Authorization": `Bearer ${this.props.bearerToken}`
+            }
+        })
             .then(response => response.json())
             .then((json) => {
                 console.log(json);
@@ -32,7 +36,11 @@ class UserInfo extends React.Component {
 
     getFollowers() {
         console.log("getting followers . . ");
-        fetch(`http://52.12.175.219/users/${this.props.id}/followers`)
+        fetch(`http://52.12.175.219/users/${this.props.id}/followers`, {
+            headers: {
+                "Authorization": `Bearer ${this.props.bearerToken}`
+            }
+        })
             .then(response => response.json())
             .then((json) => {
                 console.log(json);

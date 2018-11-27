@@ -23,6 +23,7 @@ class AsyncFullMessage extends React.Component {
         } else {
             let res = new XMLHttpRequest();
             res.open('GET', `http://52.12.175.219/users/${author_id}`, false);
+            res.setRequestHeader("Authorization", `Bearer ${this.props.bearerToken}`)
             res.send(null);
             author_name = JSON.parse(res.response).name;
             this.authorNames[author_id] = author_name;
@@ -71,7 +72,11 @@ class AsyncFullMessage extends React.Component {
 
     componentDidMount() {
         console.log(this.props.match.params.id);
-        fetch(`http://52.12.175.219/messages/${this.props.match.params.id}`)
+        fetch(`http://52.12.175.219/messages/${this.props.match.params.id}`, {
+            headers: {
+                "Authorization": `Bearer ${this.props.bearerToken}`
+            }
+        })
             .then((response) => {
                 return response.json()
             })
@@ -79,7 +84,11 @@ class AsyncFullMessage extends React.Component {
                 this.updateMessage(json)
             })
             .catch(error => {console.log(error)});
-        fetch(`http://52.12.175.219/comments?msg_id=${this.props.match.params.id}`)
+        fetch(`http://52.12.175.219/comments?msg_id=${this.props.match.params.id}`, {
+            headers: {
+                "Authorization": `Bearer ${this.props.bearerToken}`
+            }
+        })
             .then((response) => {
                 return response.json()
             })

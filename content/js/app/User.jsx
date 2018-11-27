@@ -12,6 +12,7 @@ class User extends React.Component {
                     email={this.props.user.email}
                     bio={this.props.user.bio}
                     id={this.props.user.id}
+                    bearerToken={this.props.bearerToken}
                     />
                 <Messages messages={this.props.messages} />
             </div>

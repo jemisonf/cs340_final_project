@@ -37,14 +37,18 @@ class AsyncUser extends React.Component {
             {id: element.id, text: element.message, authorId: element.poster, author: this.state.user.name}
         ));
         this.setState({
-            content: <User user={this.state.user} messages={messages} />,
+            content: <User user={this.state.user} messages={messages} bearerToken={this.props.bearerToken} />,
             contentLoaded: true,
         });
     }
 
     componentDidMount() {
         console.log(this.props.match);
-        fetch(`http://52.12.175.219/users/${this.props.match.params.id}`)
+        fetch(`http://52.12.175.219/users/${this.props.match.params.id}`, {
+            headers: {
+                "Authorization": `Bearer ${this.props.bearerToken}`
+            }
+        })
             .then((response) => {
                 return response.json();
             })
@@ -52,7 +56,11 @@ class AsyncUser extends React.Component {
                 this.updateUser(myJson);
             })
             .catch(error => {console.log(error)});
-        fetch(`http://52.12.175.219/messages?poster=${this.props.match.params.id}`)
+        fetch(`http://52.12.175.219/messages?poster=${this.props.match.params.id}`, {
+            headers: {
+                "Authorization": `Bearer ${this.props.bearerToken}`
+            }
+        })
             .then((response) => {
                 return response.json();
             })

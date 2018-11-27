@@ -19,6 +19,7 @@ class AsyncFeed extends React.Component {
         } else {
             let res = new XMLHttpRequest();
             res.open('GET', `http://52.12.175.219/users/${author_id}`, false);
+            res.setRequestHeader("Authorization", `Bearer ${this.props.bearerToken}`)
             res.send(null);
             author_name = JSON.parse(res.response).name;
             this.authorNames[author_id] = author_name;
@@ -45,7 +46,16 @@ class AsyncFeed extends React.Component {
         })
     }
     componentDidMount() {
-        fetch(`http://52.12.175.219/users/${this.props.userId}/feed`)
+        var myHeaders = new Headers();
+        console.log(this.props.bearerToken);
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("authorization", `Bearer ${this.props.bearerToken}`);
+        fetch(`http://52.12.175.219/users/${this.props.userId}/feed`,
+        {
+            mode: "cors",
+            method: "GET",
+            headers: myHeaders, 
+        })
             .then((response) => {
                 console.log(response);
                 return response.json();
@@ -58,6 +68,8 @@ class AsyncFeed extends React.Component {
             })
     }
     render() {
+        console.log(this.props.bearerToken);
+        console.log(this.props);
         if (this.state.contentLoaded) {
             return this.state.content;
         } else {

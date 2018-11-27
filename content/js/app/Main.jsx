@@ -9,22 +9,23 @@ import AsyncUser from "./AsyncUser.jsx";
 
 class Main extends React.Component {
     render() {
+        console.log(this.props.bearerToken);
         return (
             <div className="flex-col align-center">
                 <Switch>
                     <Route exact path="/" render={
                         (props) => (
-                            <AsyncFeed userId={this.props.currentUser} {...props}/>
+                            <AsyncFeed userId={this.props.currentUser} bearerToken={this.props.bearerToken} {...props}/>
                         )
                     }/>
                     <Route path="/messages/:id" render={
                         (props) => (
-                            <AsyncFullMessage currentUser={this.props.currentUser} {...props} />
+                            <AsyncFullMessage currentUser={this.props.currentUser} bearerToken={this.props.bearerToken} {...props} />
                         )
                     }/>
                     <Route path="/user/:id" render={
                         (props) => (
-                            <AsyncUser currentUser={this.props.currentUser} {...props} />
+                            <AsyncUser currentUser={this.props.currentUser} bearerToken={this.props.bearerToken} {...props} />
                         )    
                     }/>
                 </Switch>
