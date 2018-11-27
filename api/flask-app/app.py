@@ -5,6 +5,7 @@ import pymysql.cursors
 from flask import Flask, render_template, request, g, Response, jsonify
 from flask.json import JSONEncoder
 from marshmallow import ValidationError
+from flask_cors import CORS
 
 from core.comment import CommentSchema
 from core.follow import FollowSchema
@@ -26,6 +27,7 @@ class MyFlask(Flask):
 
 app = MyFlask(__name__)
 app.config.from_pyfile("configuration.py")
+CORS(app)
 tokens = {}
 
 
