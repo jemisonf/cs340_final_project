@@ -265,7 +265,7 @@ def messages():
         return Response(status=405)
 
 
-@app.route("/messages/<id>", methods=["GET", "DELETE"])
+@app.route("/messages/<id>", methods=["GET", "DELETE", "PATCH"])
 def messages_by_id(id):
     db = get_db()
     row = get_by_id(db.cursor(), "Message", id)
@@ -273,6 +273,17 @@ def messages_by_id(id):
         return Response(status=404)
 
     if request.method == "GET":
+        return jsonify(row)
+
+    elif request.method == "PATCH":
+        req_json = request.get_json()
+        if "message" not in req_json:
+            return Response(status=400)
+        with db.cursor() as cursor:
+            sql = "UPDATE Message SET message=%s"
+            cursor.execute(sql, req_json["message"])
+            db.commit()
+        row = get_by_id(db.cursor(), "Message", id)
         return jsonify(row)
 
     elif request.method == "DELETE":
