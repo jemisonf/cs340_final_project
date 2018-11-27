@@ -183,13 +183,12 @@ def followers(id):
     with db.cursor() as cursor:
         sql = "SELECT follower_id FROM Follow WHERE following_id=%s"
         cursor.execute(sql, [id])
-        follower_ids = cursor.fetchall()
+        follower_rows = cursor.fetchall()
+        follower_ids = list(map(lambda x: str(x["follower_id"]), follower_rows))
+        follower_str = ','.join(['%s'] * len(follower_ids))
 
-        sql = "SELECT * FROM User WHERE id IN (%s)"
-        cursor.execute(
-            sql,
-            [', '.join(map(lambda x: str(x["follower_id"]), follower_ids))]
-        )
+        sql = "SELECT * FROM User WHERE id IN (%s)" % follower_str
+        cursor.execute(sql, follower_ids)
         followers = cursor.fetchall()
         return jsonify(followers)
 
@@ -200,11 +199,12 @@ def following(id):
     user = get_by_id(db.cursor(), "User", id)
     if not user:
         return Response(status=404)
-    following_str = get_following_str(db.cursor(), id)
+    following_ids = get_following_ids(db.cursor(), id)
+    following_str = ','.join(['%s'] * len(following_ids))
 
     with db.cursor() as cursor:
-        sql = "SELECT * FROM User WHERE id IN (%s)"
-        cursor.execute(sql, [following_str])
+        sql = "SELECT * FROM User WHERE id IN (%s)" % following_str
+        cursor.execute(sql, following_ids)
         following = cursor.fetchall()
     return jsonify(following)
 
@@ -215,10 +215,11 @@ def feed(id):
     user = get_by_id(db.cursor(), "User", id)
     if not user:
         return Response(status=404)
-    following_str = get_following_str(db.cursor(), id)
+    following_ids = get_following_ids(db.cursor(), id)
+    following_str = ','.join(['%s'] * len(following_ids))
     with db.cursor() as cursor:
-        sql = "SELECT * FROM Message WHERE poster in (%s)"
-        cursor.execute(sql, [following_str])
+        sql = "SELECT * FROM Message WHERE poster in (%s)" % following_str
+        cursor.execute(sql, following_ids)
         feed = cursor.fetchall()
     return jsonify(feed)
 
@@ -424,11 +425,11 @@ def delete_by_id(cursor, table, id):
 
 
 # Returns a comma-separated string representing following ids
-def get_following_str(cursor, id):
+def get_following_ids(cursor, id):
     sql = "SELECT following_id FROM Follow WHERE follower_id=%s"
     cursor.execute(sql, [id])
     following_ids = cursor.fetchall()
-    return ', '.join(map(lambda x: str(x["following_id"]), following_ids))
+    return list(map(lambda x: str(x["following_id"]), following_ids))
 
 
 def get_db():
