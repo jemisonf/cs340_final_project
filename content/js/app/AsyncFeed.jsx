@@ -1,5 +1,6 @@
 import React from "react";
 import Messages from "./Messages.jsx";
+import Feed from "./Feed.jsx";
 
 class AsyncFeed extends React.Component {
     constructor(props) {
@@ -9,6 +10,15 @@ class AsyncFeed extends React.Component {
             content: {},
         };
         this.authorNames = {};
+        this.redrawContents = this.redrawContents.bind(this);
+        this.updateContent = this.updateContent.bind(this);
+    }
+
+    redrawContents() {
+        this.setState({
+            contentLoaded: false,
+        });
+        this.fetchContent();
     }
 
     getAuthorName(author_id) {
@@ -29,11 +39,12 @@ class AsyncFeed extends React.Component {
 
     updateContent(json) {
         console.log(json);
+        console.log(this.props.currentUser);
         let messages = json.map((element) => (
             {id: element.id, text: element.message, authorId: element.poster, author: this.getAuthorName(element.poster)}
         ))
         this.setState({
-            content: <Messages messages={messages} />,
+            content: <Feed messages={messages} redrawFeed={this.redrawContents} bearerToken={this.props.bearerToken} currentUser={this.props.currentUser} />,
             contentLoaded: true,
         })
     }
@@ -45,12 +56,13 @@ class AsyncFeed extends React.Component {
             contentLoaded: true,
         })
     }
-    componentDidMount() {
+
+    fetchContent() {
         var myHeaders = new Headers();
         console.log(this.props.bearerToken);
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("authorization", `Bearer ${this.props.bearerToken}`);
-        fetch(`http://52.12.175.219/users/${this.props.userId}/feed`,
+        fetch(`http://52.12.175.219/users/${this.props.currentUser}/feed`,
         {
             mode: "cors",
             method: "GET",
@@ -66,6 +78,10 @@ class AsyncFeed extends React.Component {
             .catch((error) => {
                 this.useBlankContent();
             })
+
+    }
+    componentDidMount() {
+        this.fetchContent();
     }
     render() {
         console.log(this.props.bearerToken);

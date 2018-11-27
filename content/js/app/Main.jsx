@@ -15,7 +15,7 @@ class Main extends React.Component {
                 <Switch>
                     <Route exact path="/" render={
                         (props) => (
-                            <AsyncFeed userId={this.props.currentUser} bearerToken={this.props.bearerToken} {...props}/>
+                            <AsyncFeed currentUser={this.props.currentUser} bearerToken={this.props.bearerToken} {...props}/>
                         )
                     }/>
                     <Route path="/messages/:id" render={
