@@ -23,6 +23,60 @@ tags:
 - name: Follows
 
 paths:
+  /login:
+    post:
+      summary: Log in
+      tags:
+      - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Successfully logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '400':
+          description: Invalid request body
+        '404':
+          description: No credentials found with username and password combination
+        '500':
+          description: Internal server error
+  /logout:
+    post:
+      summary: Log out
+      tags:
+      - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+      responses:
+        '204':
+          description: Successfully logged out
+        '400':
+          description: Invalid request body
+        '404':
+          description: No credentials found with username and password combination
+        '500':
+          description: Internal server error
+
   /users:
     get:
       summary: Get users by search parameters

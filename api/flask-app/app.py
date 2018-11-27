@@ -1,17 +1,15 @@
+import secrets
 from datetime import datetime
 
 import pymysql.cursors
 from flask import Flask, render_template, request, g, Response, jsonify
 from flask.json import JSONEncoder
 from marshmallow import ValidationError
-from flask_httpauth import HTTPTokenAuth
-from hashlib import sha256
-import json
 
 from core.comment import CommentSchema
+from core.follow import FollowSchema
 from core.message import MessageSchema
 from core.user import UserSchema
-from core.follow import FollowSchema
 
 
 # Override JSONEncoder's date formatting to keep the format consistent
@@ -27,16 +25,24 @@ class MyFlask(Flask):
 
 
 app = MyFlask(__name__)
-auth = HTTPTokenAuth(scheme='Token')
 app.config.from_pyfile("configuration.py")
+tokens = {}
 
 
-@auth.verify_token
-def verify_token(token):
-    return hasattr(g, "tokens") and token in g.tokens
+@app.before_request
+def verify_token():
+    if request.endpoint in ("login", "logout"):
+        return
+    if "Authorization" not in request.headers.keys():
+        return Response(status=401)
+    split_token = request.headers["Authorization"].split(' ')
+    if (len(split_token) != 2 or
+            split_token[0] != "Bearer" or
+            split_token[1] not in tokens.values()):
+        return Response(status=401)
 
 
-@app.route("/login", methods=["GET"])
+@app.route("/login", methods=["POST"])
 def login():
     body = request.get_json()
     if not all(k in body for k in ("username", "password")):
@@ -47,16 +53,32 @@ def login():
 
     if (username not in app.config["CREDENTIALS"] or
             password != app.config["CREDENTIALS"][username]):
-        return Response("Bad username/password combination", status=400)
+        return Response(status=404)
 
-    credentials = {username: password}
-    new_token = sha256(json.dumps(credentials, sort_keys=True, ensure_ascii=True).encode('utf-8')).digest()
-    if not hasattr(g, "tokens"):
-        g.tokens = [new_token]
-    else:
-        g.tokens.append(new_token)
-    res_payload = {"token": new_token}
+    if username not in tokens:
+        new_token = secrets.token_hex(16)
+        tokens[username] = new_token
+    res_payload = {"token": tokens[username]}
     return jsonify(res_payload)
+
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    body = request.get_json()
+    if "token" not in body:
+        return Response(status=400)
+
+    token = body["token"]
+
+    if token not in tokens.values():
+        return Response(status=404)
+
+    for key, value in tokens.items():
+        if value == token:
+            tokens.pop(key)
+            break
+
+    return Response(status=204)
 
 
 # Probably won't use templates since the Flask app will function solely as an
@@ -67,7 +89,6 @@ def index():
 
 
 @app.route("/users", methods=["GET", "POST"])
-@auth.login_required
 def users():
     db = get_db()
 
