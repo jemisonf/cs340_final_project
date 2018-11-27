@@ -37,7 +37,7 @@ class AsyncUser extends React.Component {
             {id: element.id, text: element.message, authorId: element.poster, author: this.state.user.name}
         ));
         this.setState({
-            content: <User user={this.state.user} messages={messages} bearerToken={this.props.bearerToken} />,
+            content: <User user={this.state.user} messages={messages} bearerToken={this.props.bearerToken} currentUser={this.props.currentUser} />,
             contentLoaded: true,
         });
     }
