@@ -27,6 +27,7 @@ class MyFlask(Flask):
 
 app = MyFlask(__name__)
 app.config.from_pyfile("configuration.py")
+app.url_map.strict_slashes = False
 CORS(app)
 tokens = {}
 
@@ -47,20 +48,20 @@ def verify_token():
 @app.route("/login", methods=["POST"])
 def login():
     body = request.get_json()
-    if not all(k in body for k in ("username", "password")):
+    if not all(k in body for k in ("email", "password")):
         return Response(status=400)
 
-    username = body["username"]
+    email = body["email"]
     password = body["password"]
 
-    if (username not in app.config["CREDENTIALS"] or
-            password != app.config["CREDENTIALS"][username]):
+    if (email not in app.config["CREDENTIALS"] or
+            password != app.config["CREDENTIALS"][email]):
         return Response(status=404)
 
-    if username not in tokens:
+    if email not in tokens:
         new_token = secrets.token_hex(16)
-        tokens[username] = new_token
-    res_payload = {"token": tokens[username]}
+        tokens[email] = new_token
+    res_payload = {"token": tokens[email]}
     return jsonify(res_payload)
 
 

@@ -6,6 +6,6 @@ DB_PORT = 3306
 SECRET_KEY = "changeme"
 
 CREDENTIALS = {
-    "username": "password",
-    "username2": "password2"
+    "email@example.com": "password",
+    "email2@example.com": "password2"
 }
