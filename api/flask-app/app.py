@@ -33,7 +33,7 @@ tokens = {}
 
 @app.before_request
 def verify_token():
-    if request.endpoint in ("login", "logout"):
+    if request.endpoint in ("login", "logout") or request.method == "OPTIONS":
         return
     if "Authorization" not in request.headers.keys():
         return Response(status=401)
@@ -294,7 +294,7 @@ def comments():
         with db.cursor() as cursor:
             sql = "SELECT * FROM Comment WHERE 1"
             if message_id:
-                sql += " AND message_id=%(message_id)s"
+                sql += " AND msg_id=%(message_id)s"
             if commenter_id:
                 sql += " AND commenter_id=%(commenter_id)s"
             args = {"message_id": message_id, "commenter_id": commenter_id}
