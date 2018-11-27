@@ -1,3 +1,4 @@
+import secrets
 from datetime import datetime
 
 import pymysql.cursors
@@ -7,9 +8,9 @@ from marshmallow import ValidationError
 from flask_cors import CORS
 
 from core.comment import CommentSchema
+from core.follow import FollowSchema
 from core.message import MessageSchema
 from core.user import UserSchema
-from core.follow import FollowSchema
 
 
 # Override JSONEncoder's date formatting to keep the format consistent
@@ -27,6 +28,59 @@ class MyFlask(Flask):
 app = MyFlask(__name__)
 app.config.from_pyfile("configuration.py")
 CORS(app)
+tokens = {}
+
+
+@app.before_request
+def verify_token():
+    if request.endpoint in ("login", "logout"):
+        return
+    if "Authorization" not in request.headers.keys():
+        return Response(status=401)
+    split_token = request.headers["Authorization"].split(' ')
+    if (len(split_token) != 2 or
+            split_token[0] != "Bearer" or
+            split_token[1] not in tokens.values()):
+        return Response(status=401)
+
+
+@app.route("/login", methods=["POST"])
+def login():
+    body = request.get_json()
+    if not all(k in body for k in ("username", "password")):
+        return Response(status=400)
+
+    username = body["username"]
+    password = body["password"]
+
+    if (username not in app.config["CREDENTIALS"] or
+            password != app.config["CREDENTIALS"][username]):
+        return Response(status=404)
+
+    if username not in tokens:
+        new_token = secrets.token_hex(16)
+        tokens[username] = new_token
+    res_payload = {"token": tokens[username]}
+    return jsonify(res_payload)
+
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    body = request.get_json()
+    if "token" not in body:
+        return Response(status=400)
+
+    token = body["token"]
+
+    if token not in tokens.values():
+        return Response(status=404)
+
+    for key, value in tokens.items():
+        if value == token:
+            tokens.pop(key)
+            break
+
+    return Response(status=204)
 
 
 # Probably won't use templates since the Flask app will function solely as an
