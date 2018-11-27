@@ -319,6 +319,31 @@ paths:
           description: Message with this id not found
         '500':
           description: Internal server error
+    patch:
+      summary: Update a message
+      tags:
+      - Messages
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+      responses:
+        '200':
+          description: Successfully updated message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: Message with this id not found
+        '400':
+          description: Bad request body
+        '500':
+          description: Internal server error
     delete:
       summary: Delete a message
       tags:
