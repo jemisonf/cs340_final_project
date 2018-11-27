@@ -13,6 +13,16 @@ class AsyncFullMessage extends React.Component {
             commentsLoaded: false,
         }
         this.authorNames = {};
+        this.redrawComments = this.redrawComments.bind(this);
+    }
+
+    redrawComments() {
+        this.setState({
+           commentsLoaded: false, 
+           messageLoaded: false,
+        })
+        this.fetchContents();
+
     }
 
     getAuthorName(author_id) {
@@ -34,10 +44,14 @@ class AsyncFullMessage extends React.Component {
     setContent() {
         this.setState({
             contentLoaded: true,
-            content: <FullMessage text={this.state.message.text} 
+            content: <FullMessage id={this.state.message.id}
+                                  text={this.state.message.text} 
                                   author={this.state.message.author}
                                   authorId={this.state.message.authorId}
-                                  comments={this.state.comments} />
+                                  comments={this.state.comments} 
+                                  redrawComments={this.redrawComments} 
+                                  bearerToken={this.props.bearerToken} 
+                                  currentUser={this.props.currentUser} />
         })
     }
 
@@ -64,13 +78,14 @@ class AsyncFullMessage extends React.Component {
                 text: json.message,
                 authorId: json.poster,
                 author: this.getAuthorName(json.poster),
+                id: json.id
             },
             messageLoaded: true,
         })
         if (this.state.commentsLoaded) this.setContent()
     }
 
-    componentDidMount() {
+    fetchContents() {
         console.log(this.props.match.params.id);
         fetch(`http://52.12.175.219/messages/${this.props.match.params.id}`, {
             headers: {
@@ -96,6 +111,10 @@ class AsyncFullMessage extends React.Component {
                 this.updateComments(json)
             })
             .catch(error => {console.log("comments error" + error)});
+    }
+
+    componentDidMount() {
+        this.fetchContents();
     }
 
     render() {

@@ -13,7 +13,7 @@ class LoginForm extends React.Component {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                username: document.querySelector("#username").value,
+                email: document.querySelector("#username").value,
                 password: document.querySelector("#password").value
             })
         })
