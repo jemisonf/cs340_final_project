@@ -1,5 +1,5 @@
-# Flask Skeleton API
-This is a skeleton Flask app that serves as a REST API.
+# Flask API
+This is a Flask app that serves as a REST API.
 
 ## Usage
 1. Copy configuration_example.py to configuration.py and modify as necessary
