@@ -26,7 +26,7 @@ class AsyncUser extends React.Component {
     updateMessages(json) {
         console.log(json);
         this.setState({
-            messages: json,
+            messages: json.sort((firstElement, secondElement) => new Date(secondElement.posted_date) - new Date(firstElement.posted_date)),
             messagesLoaded: true,
         })
         if (this.state.userLoaded) this.setContent();

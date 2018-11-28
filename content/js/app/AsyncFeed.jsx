@@ -40,8 +40,9 @@ class AsyncFeed extends React.Component {
         console.log(json);
         console.log(this.props.currentUser);
         let messages = json.map((element) => (
-            {id: element.id, text: element.message, authorId: element.poster, author: this.getAuthorName(element.poster)}
-        ))
+            {id: element.id, text: element.message, authorId: element.poster, author: this.getAuthorName(element.poster), posted_date: element.posted_date}
+        )).sort((firstMessage, secondMessage) => new Date(secondMessage.posted_date) - new Date(firstMessage.posted_date));
+        console.log(messages);
         this.setState({
             content: <Feed messages={messages} redrawFeed={this.redrawContents} bearerToken={this.props.bearerToken} currentUser={this.props.currentUser} />,
             contentLoaded: true,
