@@ -8,13 +8,17 @@ This is a Flask application that serves as a REST API for ***msgr***. It handles
 1. Build the Docker image
 
 ```shell
-$ docker build -t msgr .
+$ docker build -t msgr_api .
 ```
 
 2. Run the Docker container
 
 ```shell
-$ docker run --name msgr -d -p 5000:5000 msgr
+$ docker run -d \
+    --name msgr_api \
+    -p 80:5000 \
+    -v ./flask-app/configuration.py:/app/configuration.py \
+    msgr_api
 ```
 
 ### Locally
