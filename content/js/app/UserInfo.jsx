@@ -79,6 +79,14 @@ class UserInfo extends React.Component {
         })
     }
 
+    follow() {
+
+    }
+
+    unfollow() {
+
+    }
+
     render() {
         return (
             <div className="box box-shadow flex-col align-center">
@@ -95,7 +103,7 @@ class UserInfo extends React.Component {
                 </div>
                 { this.state.activeFollowersOrFollowingItem }
                 <div className="flex-row space-around">
-                    <button className="btn btn-success">Follow</button>
+                    {this.state.followers.filter(follower => follower.id == this.props.currentUser).length == 0 ? <button onClick={this.follow} className="btn btn-success">Follow</button> : <button onClick={this.unfollow} className="btn btn-success-o">Unfollow</button>}
                 </div>
             </div>
         )

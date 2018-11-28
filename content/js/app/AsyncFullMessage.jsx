@@ -99,7 +99,7 @@ class AsyncFullMessage extends React.Component {
                 this.updateMessage(json)
             })
             .catch(error => {console.log(error)});
-        fetch(`http://52.12.175.219/comments?msg_id=${this.props.match.params.id}`, {
+        fetch(`http://52.12.175.219/comments?message_id=${this.props.match.params.id}`, {
             headers: {
                 "Authorization": `Bearer ${this.props.bearerToken}`
             }
