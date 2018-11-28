@@ -11,6 +11,8 @@ class UserInfo extends React.Component {
         }
         this.showFollowers = this.showFollowers.bind(this);
         this.showFollowing = this.showFollowing.bind(this);
+        this.follow = this.follow.bind(this);
+        this.unfollow = this.unfollow.bind(this);
     }
 
     componentDidMount() {
@@ -80,10 +82,31 @@ class UserInfo extends React.Component {
     }
 
     follow() {
-
+        fetch(`http://52.12.175.219/follows`, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${this.props.bearerToken}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                follower_id: this.props.currentUser,
+                following_id: this.props.id
+            })
+        })
+            .then(res => res.json())
+            .then(json => this.getFollowers())
     }
 
     unfollow() {
+        fetch(`http://52.12.175.219/follows?follower_id=${this.props.currentUser}&following_id=${this.props.id}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${this.props.bearerToken}`,
+                "Content-Type": "application/json",
+            },
+        })
+            .then(res => res.json())
+            .then(json => this.getFollowers())
 
     }
 
