@@ -11,6 +11,8 @@ class UserInfo extends React.Component {
         }
         this.showFollowers = this.showFollowers.bind(this);
         this.showFollowing = this.showFollowing.bind(this);
+        this.follow = this.follow.bind(this);
+        this.unfollow = this.unfollow.bind(this);
     }
 
     componentDidMount() {
@@ -79,6 +81,35 @@ class UserInfo extends React.Component {
         })
     }
 
+    follow() {
+        fetch(`http://52.12.175.219/follows`, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${this.props.bearerToken}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                follower_id: this.props.currentUser,
+                following_id: this.props.id
+            })
+        })
+            .then(res => res.json())
+            .then(json => this.getFollowers())
+    }
+
+    unfollow() {
+        fetch(`http://52.12.175.219/follows?follower_id=${this.props.currentUser}&following_id=${this.props.id}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${this.props.bearerToken}`,
+                "Content-Type": "application/json",
+            },
+        })
+            .then(res => res.json())
+            .then(json => this.getFollowers())
+
+    }
+
     render() {
         return (
             <div className="box box-shadow flex-col align-center">
@@ -95,7 +126,7 @@ class UserInfo extends React.Component {
                 </div>
                 { this.state.activeFollowersOrFollowingItem }
                 <div className="flex-row space-around">
-                    <button className="btn btn-success">Follow</button>
+                    {this.state.followers.filter(follower => follower.id == this.props.currentUser).length == 0 ? <button onClick={this.follow} className="btn btn-success">Follow</button> : <button onClick={this.unfollow} className="btn btn-success-o">Unfollow</button>}
                 </div>
             </div>
         )

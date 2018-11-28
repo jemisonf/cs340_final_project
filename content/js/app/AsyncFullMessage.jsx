@@ -63,9 +63,10 @@ class AsyncFullMessage extends React.Component {
                     text: element.message,
                     authorId: element.commenter_id,
                     author: this.getAuthorName(element.commenter_id),
-                    id: element.id
+                    id: element.id,
+                    posted_date: element.posted_date,
                 }
-            )),
+            )).sort((firstComment, secondComment) => new Date(firstComment.posted_date) - new Date(secondComment.posted_date)),
             commentsLoaded: true
         })
         if (this.state.messageLoaded) this.setContent();
@@ -99,7 +100,7 @@ class AsyncFullMessage extends React.Component {
                 this.updateMessage(json)
             })
             .catch(error => {console.log(error)});
-        fetch(`http://52.12.175.219/comments?msg_id=${this.props.match.params.id}`, {
+        fetch(`http://52.12.175.219/comments?message_id=${this.props.match.params.id}`, {
             headers: {
                 "Authorization": `Bearer ${this.props.bearerToken}`
             }
