@@ -22,7 +22,6 @@ class AsyncFeed extends React.Component {
     }
 
     getAuthorName(author_id) {
-        // return "Fischer Jemison"
         let author_name = "";
         if (author_id in this.authorNames) {
             return this.authorNames[author_id]

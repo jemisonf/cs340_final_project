@@ -8,25 +8,36 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentUser: 21,
+            currentUser: 0,
             bearerToken: "",
             userLoggedIn: false,
         }
         this.setCreds = this.setCreds.bind(this);
     }
 
-    setCreds(userId, bearerToken) {
+    setCreds(email, bearerToken) {
         console.log(bearerToken);
-        this.setState({
-            currentUser: userId,
-            bearerToken: bearerToken,
-            userLoggedIn: true,
+        fetch(`http://52.12.175.219/users?email=${email}`, {
+            headers: {
+                "Authorization": `Bearer ${bearerToken}`
+            }
         })
+            .then(res => res.json())
+            .then(json => {
+                console.log(json);
+                console.log(json.id);
+                this.setState({
+                    currentUser: json[0].id,
+                    bearerToken: bearerToken,
+                    userLoggedIn: true,
+                })
+            })
     }
 
     render() {
         if (this.state.userLoggedIn) {
             console.log(this.state.bearerToken);
+            console.log(this.state.currentUser);
             return (
                     <BrowserRouter>
                         <div id="main">

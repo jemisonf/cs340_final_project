@@ -19,7 +19,7 @@ class LoginForm extends React.Component {
         })
         .then(response => response.json())
         .then(json => {
-            this.props.setCreds(21, json.token);
+            this.props.setCreds(document.querySelector("#username").value, json.token);
         })
         .catch(error => console.log(error));
     }
