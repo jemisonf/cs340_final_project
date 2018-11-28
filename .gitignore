@@ -1,6 +1,9 @@
 # JetBrains Applications
 **/.idea
 
+# Vscode
+.vscode/**
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -19,6 +22,7 @@ venv.bak/
 content/node_modules
 content/dist/index.js
 content/dist/main.css
+npm-debug.log
 
 # flask app configuration file
 api/flask-app/configuration.py

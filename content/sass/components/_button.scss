@@ -1,0 +1,17 @@
+.btn {
+    background: none;
+    border: 0;
+    font-size: 1.4em;
+    padding: 5px 10px;
+    border-radius: 40px;
+}
+
+.btn-success {
+    background-color: $success;
+    color: $white;
+}
+
+.btn-danger {
+    background-color: $danger;
+    color: $white;
+}
