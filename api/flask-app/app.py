@@ -185,6 +185,8 @@ def followers(id):
         cursor.execute(sql, [id])
         follower_rows = cursor.fetchall()
         follower_ids = list(map(lambda x: str(x["follower_id"]), follower_rows))
+        if not follower_ids:
+            return jsonify([])
         follower_str = ','.join(['%s'] * len(follower_ids))
 
         sql = "SELECT * FROM User WHERE id IN (%s)" % follower_str
@@ -200,6 +202,8 @@ def following(id):
     if not user:
         return Response(status=404)
     following_ids = get_following_ids(db.cursor(), id)
+    if not following_ids:
+        return jsonify([])
     following_str = ','.join(['%s'] * len(following_ids))
 
     with db.cursor() as cursor:
@@ -216,6 +220,8 @@ def feed(id):
     if not user:
         return Response(status=404)
     following_ids = get_following_ids(db.cursor(), id)
+    if not following_ids:
+        return jsonify([])
     following_str = ','.join(['%s'] * len(following_ids))
     with db.cursor() as cursor:
         sql = "SELECT * FROM Message WHERE poster in (%s)" % following_str
@@ -279,9 +285,10 @@ def messages_by_id(id):
         req_json = request.get_json()
         if "message" not in req_json:
             return Response(status=400)
+        args = {"id": id, "message": req_json["message"]}
         with db.cursor() as cursor:
-            sql = "UPDATE Message SET message=%s"
-            cursor.execute(sql, req_json["message"])
+            sql = "UPDATE Message SET message=%(message)s WHERE id=%(id)s"
+            cursor.execute(sql, args)
             db.commit()
         row = get_by_id(db.cursor(), "Message", id)
         return jsonify(row)
