@@ -1,0 +1,123 @@
+body {
+  background-color: #eeeeee;
+  padding: 0;
+  margin: 0; }
+
+body {
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  color: #0e0e0e; }
+
+h1 {
+  font-family: "Oleo Script", sans-serif;
+  font-size: 2.5em; }
+
+a {
+  color: #00A2E8;
+  font-weight: 700; }
+
+.flex {
+  display: flex; }
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin-bottom: 10px; }
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  width: 100%; }
+
+.flex-wrap {
+  flex-wrap: wrap; }
+
+.justify-center {
+  justify-content: center; }
+
+.justify-start {
+  justify-content: flex-start; }
+
+.justify-end {
+  justify-content: flex-end; }
+
+.space-between {
+  justify-content: space-between; }
+
+.space-around {
+  justify-content: space-around; }
+
+.space-evenly {
+  justify-content: space-evenly; }
+
+.align-center {
+  align-items: center; }
+
+.align-start {
+  align-items: start; }
+
+.nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
+  height: 100px;
+  background-color: #fefefe;
+  margin-bottom: 30px; }
+  .nav h1 {
+    position: absolute;
+    left: 50%;
+    width: 100px;
+    margin-left: -50px; }
+  .nav a {
+    padding-right: 30px; }
+
+.box-shadow {
+  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07); }
+
+.box {
+  background-color: #fefefe;
+  width: 467px;
+  min-height: 133px;
+  padding: 30px;
+  margin-bottom: 30px; }
+
+.box-inner {
+  margin-bottom: 10px;
+  background-color: #fefefe;
+  min-height: 133px;
+  padding: 30px; }
+
+.btn {
+  background: none;
+  border: 0;
+  font-size: 1.4em;
+  padding: 5px 10px;
+  border-radius: 40px; }
+
+.btn-success {
+  background-color: #25AE19;
+  color: #fefefe; }
+
+.btn-danger {
+  background-color: #F52544;
+  color: #fefefe; }
+
+.comment {
+  background-color: #eeeeee;
+  width: 100%;
+  border-bottom: 1px solid #d5d5d5;
+  padding: 10px;
+  box-sizing: border-box; }
+  .comment:last-child {
+    border-bottom: 0; }
+
+.frame {
+  width: 467px;
+  min-height: 133px;
+  margin-bottom: 30px; }
+
+#submit-message {
+  width: 100%;
+  margin-bottom: 10px; }
